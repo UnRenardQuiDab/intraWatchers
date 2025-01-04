@@ -1,18 +1,17 @@
-import { Card, Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import { Badge, Card, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import { Avatar } from "./ui/avatar";
-import ExamStats from "./ExamStats";
 
-export default function ProfileCard() {
+export default function ProfileCard({...props}) {
 
 	return (
-		<Card.Root>
-			<Card.Body>
-				<HStack mb="6" gap="3">
+		<Card.Root w='100%' {...props}>
+			<Card.Body p='4' paddingBottom={0}>
+				<HStack mb="6">
 					<Avatar
 						size="sm"
 						name="Nate Foss"
 						src="https://bit.ly/naruto-sage"
-					/>
+						/>
 					<Stack gap="0">
 						<Text fontWeight="semibold" textStyle="sm">
 						Nate Foss 
@@ -22,14 +21,15 @@ export default function ProfileCard() {
 						</Text>
 					</Stack>
 				</HStack>
-	
-				<Flex gap="2">
-					<ExamStats label="Stage 1" value={6} needed={12} info='test' />
-					<ExamStats label="Level" value="5" />
-					<ExamStats label="Level" value="5" />
-				</Flex>
-
 			</Card.Body>
+			<Card.Footer p='4' paddingTop={0}>
+			<Flex
+				gap='8px'
+			>
+				<Badge colorPalette="black">Watcher</Badge>
+				<Badge colorPalette="yellow">Tutor</Badge>
+			</Flex>
+			</Card.Footer>
 		</Card.Root>
 	);
 }
