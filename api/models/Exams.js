@@ -1,6 +1,7 @@
 const mongoose = require('../db');
 
 const examsSchema = new mongoose.Schema({
+	title: {type: String},
 	start_at: { type: Date, required: true },
 	duration: { type: Number, required: true },
 	authorized_groups: [{ type: String, required: true }],

@@ -13,11 +13,11 @@ export default function Home() {
 		let months = [];
 		exams.forEach(exam => {
 			const month = new Date(exam.start_at).toLocaleString('default', { month: 'long' });
-			if (months.includes(month))
+			const year = new Date(exam.start_at).getFullYear();
+			if (months.find((m) => m.month === month && m.year === year))
 				return;
-			months.push(month);
+			months.push({month, year});
 		})
-		console.log(months);
 		return months;
 	}
 
@@ -42,19 +42,21 @@ export default function Home() {
 				<Stack w='100%'>
 					<Button w='100%' variant='ghost' display='flex' justifyContent='space-between'>Home <FaHouse/></Button>
 					<Button w='100%' variant='ghost' display='flex' justifyContent='space-between'>History <FaClockRotateLeft /></Button>
-					<Button marginTop='16px' w='100%' variant='solid' colorPalette='red' display='flex' justifyContent='space-between'>Logout <FaRightFromBracket/></Button>
 				</Stack>
 				<Separator w='100%' />
+				<Button justifySelf='flex-end' w='100%' variant='solid' colorPalette='red' display='flex' justifyContent='space-between'>Logout <FaRightFromBracket/></Button>
 			</Stack>
 			<Stack
 				h='100vh'
-				w='80%'
+				w='82%'
 				padding='8px'
+				overflowY='scroll'
 			>
-				{months.map((month) => (
-					<ExamMonthSection key={month + 'month'} month={month} exams={
-						exams.filter(exam => 
-							new Date(exam.start_at).toLocaleString('default', { month: 'long' }) === month
+				{months.map((date) => (
+					<ExamMonthSection key={date.month + date.year} year={date.year} month={date.month} exams={
+						exams.filter(exam =>
+							new Date(exam.start_at).toLocaleString('default', { month: 'long' }) === date.month &&
+							new Date(exam.start_at).getFullYear() === date.year
 						)
 					} />
 				))}

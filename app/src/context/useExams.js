@@ -28,6 +28,7 @@ export const ExamsProvider = ({ children }) => {
 		if (newExam.ok) {
 			setExams([...exams, await newExam.json()]);
 		}
+		return newExam;
 	};
 
 	const remove = async (examId) => {
@@ -36,7 +37,7 @@ export const ExamsProvider = ({ children }) => {
 			credentials: 'include',
 		});
 		if (deleted.ok) {
-			setExams(exams.filter(exam => exam.id !== examId));
+			setExams(exams.filter(exam => exam._id !== examId));
 		}
 	}
 
@@ -46,13 +47,15 @@ export const ExamsProvider = ({ children }) => {
 			credentials: 'include',
 		});
 		if (register.ok) {
-			setExams(exams.map(async exam => {
-				if (exam.id === examId) {
-					return await register.json();
+			const newExam = await register.json();
+			setExams(exams.map(exam => {
+				if (exam._id === examId) {
+					return newExam;
 				}
 				return exam;
 			}));
 		}
+		return register;
 	};
 
 	const unregister = async (examId) => {
@@ -61,13 +64,15 @@ export const ExamsProvider = ({ children }) => {
 			credentials: 'include',
 		});
 		if (unregister.ok) {
-			setExams(exams.map(async exam => {
-				if (exam.id === examId) {
-					return await unregister.json();
+			const newExam = await unregister.json();
+			setExams(exams.map(exam => {
+				if (exam._id === examId) {
+					return newExam;
 				}
 				return exam;
 			}));
 		}
+		return unregister;
 	};
 
 	useEffect(() => {

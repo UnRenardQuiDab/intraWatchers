@@ -7,18 +7,20 @@ const router = new express.Router();
 router.get('/', async (req, res) => {
 	const exams = await Exams.find({
 	// 	start_at: { $gt: new Date(), $lt: new Date(new Date().getTime() + 60 * 60 * 24 * 60 * 1000) } // 2 months for now
-	}).sort({ start_at: 1 });
+	}).sort({ start_at: 1 }).populate('watchers');
+	// await exams.populate('watchers');
 	return res.status(200).send(exams);
 });
 
 router.post('/', isStaff, async (req, res) => {
-	const { start_at, duration, authorized_groups, nb_slots } = req.body;
+	const { start_at, duration, authorized_groups, nb_slots, title } = req.body;
 	try {
 		const exam = new Exams({
 			start_at,
 			duration,
 			authorized_groups,
-			nb_slots
+			nb_slots,
+			title
 		});
 		await exam.save();
 		return res.status(201).send(exam);
@@ -61,8 +63,9 @@ router.post('/:id/register', async (req, res) => {
 		if (!is_authorized) {
 			return res.status(403).send("You are not authorized to register to this exam");
 		}
-		let watch_has_experience = false;
+		let watch_has_experience = true;
 		if (exam.watchers.length == exam.nb_slots - 1) {
+			watch_has_experience = false;
 			await exam.populate('watchers');
 			for (const watcher of exam.watchers) {
 				if (watcher.nb_watch > 0)
@@ -76,6 +79,7 @@ router.post('/:id/register', async (req, res) => {
 			return res.status(400).send("You need to have at least one watch to register");
 		exam.watchers.push(req.user._id);
 		await exam.save();
+		await exam.populate('watchers');
 		return res.status(200).send(exam);
 	}
 	catch(e) {
@@ -86,12 +90,13 @@ router.post('/:id/register', async (req, res) => {
 
 router.post('/:id/unregister', async (req, res) => {
 	try {
-		const exam = Exams.findById(req.params.id);
+		const exam = await Exams.findById(req.params.id);
 		if (!exam) {
 			return res.status(404).send();
 		}
-		exam.watchers = exam.watchers.filter(watcher => watcher !== req.user._id);
+		exam.watchers = exam.watchers.filter(watcher => !watcher.equals(req.user._id));
 		await exam.save();
+		await exam.populate('watchers');
 		return res.status(200).send(exam);
 	}
 	catch {

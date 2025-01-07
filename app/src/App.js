@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 import { MeProvider } from './context/useMe';
 import { ExamsProvider } from './context/useExams';
+import { Toaster } from './components/ui/toaster';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path='*' element={<Login/>} />
         </Routes>
       </Router>
+      <Toaster />
      </ExamsProvider>
     </MeProvider>
   );
