@@ -44,7 +44,7 @@ export default function Home() {
 					<Button w='100%' variant='ghost' display='flex' justifyContent='space-between'>History <FaClockRotateLeft /></Button>
 				</Stack>
 				<Separator w='100%' />
-				<Button justifySelf='flex-end' w='100%' variant='solid' colorPalette='red' display='flex' justifyContent='space-between'>Logout <FaRightFromBracket/></Button>
+				<Button w='100%' variant='solid' colorPalette='red' display='flex' justifyContent='space-between'>Logout <FaRightFromBracket/></Button>
 			</Stack>
 			<Stack
 				h='100vh'

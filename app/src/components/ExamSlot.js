@@ -13,7 +13,8 @@ export default function ExamSlot({ watcher, exam, disabled, ...props }) {
 	const IAmWatcher = watcher && me && watcher._id === me._id;
 	const [isLoading, setIsLoading] = useState(false);
 
-	const register = async () => {
+	const register = async (e) => {
+		e.stopPropagation();
 		setIsLoading(true);
 		const res = await exam.register();
 		if (!res.ok) {
@@ -26,7 +27,8 @@ export default function ExamSlot({ watcher, exam, disabled, ...props }) {
 		setIsLoading(false);
 	};
 
-	const unregister = async () => {
+	const unregister = async (e) => {
+		e.stopPropagation();
 		setIsLoading(true);
 		const res = await exam.unregister();
 		if (!res.ok) {

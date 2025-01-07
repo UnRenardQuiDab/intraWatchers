@@ -39,6 +39,7 @@ export const ExamsProvider = ({ children }) => {
 		if (deleted.ok) {
 			setExams(exams.filter(exam => exam._id !== examId));
 		}
+		return deleted;
 	}
 
 	const resiter = async (examId) => {
@@ -75,6 +76,17 @@ export const ExamsProvider = ({ children }) => {
 		return unregister;
 	};
 
+	const archive = async (examId) => {
+		const archived = await fetch(`${config.apiUrl}/exams/${examId}/archived`, {
+			method: 'POST',
+			credentials: 'include',
+		});
+		if (archived.ok) {
+			setExams(exams.filter(exam => exam._id !== examId));
+		}
+		return archived;
+	}
+
 	useEffect(() => {
 		fetchExams();
 	}, []);
@@ -87,6 +99,7 @@ export const ExamsProvider = ({ children }) => {
 				end_at: new Date(new Date(exam.start_at).setHours(new Date(exam.start_at).getHours() + exam.duration)),
 				register: () => resiter(exam._id),
 				unregister: () => unregister(exam._id),
+				archive: () => archive(exam._id),
 				remove: () => remove(exam._id),
 			};
 		}),

@@ -6,7 +6,8 @@ const examsSchema = new mongoose.Schema({
 	duration: { type: Number, required: true },
 	authorized_groups: [{ type: String, required: true }],
 	nb_slots: { type: Number, required: true },
-	watchers: {type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }], default: []}
+	watchers: {type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }], default: []},
+	is_archived: {type: Boolean, default: false}
 });
 
 const Exams = mongoose.model('Exams', examsSchema);

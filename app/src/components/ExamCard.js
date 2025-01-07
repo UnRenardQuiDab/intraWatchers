@@ -4,20 +4,26 @@ import ExamSlot from "./ExamSlot";
 import GroupBadge from "./GroupBadge";
 import { useMe } from "../context/useMe";
 import { Alert } from "./ui/alert";
+import ExamStatus from "./ExamStatus";
+import ExamAdminDrawer from "./ExamAdminDrawer";
+import { useState } from "react";
 
 export default function ExamCard({ exam, ...props }) {
 
 	const { me } = useMe();
+	const [open, setOpen] = useState(false);
 
 	const IAmWatcher = me && exam && exam.watchers.find((watcher) => watcher._id === me._id);
 	const ICanWatch = me && exam && (exam.authorized_groups.find((group) => me.groups.includes(group)) || exam.watchers.find(w => w._id === me._id ) || me.is_staff);
 
+	if (me)
 	return (
-		<Card.Root w='100%' {...props} borderColor={IAmWatcher && 'border.info'}>
+		<Card.Root w='100%' {...props} borderColor={IAmWatcher && 'border.info'} _hover={me.is_staff ? {bg: 'bg.muted', borderColor: 'fg.info'}: {}} onClick={me.is_staff && (() => setOpen(true))}>
 			<Card.Header>
 				<Card.Title display='flex' alignItems='center' justifyContent='space-between' gap='4px'>
 					<Flex alignItems='center' gap='4px'>
 						<FaCalendar/> {exam.start_at.toLocaleDateString('fr-FR')}
+						<ExamStatus exam={exam} ml='8px'/>
 					</Flex>
 					{ exam.title && <Text fontSize='sm' color='text.subtle'>{exam.title}</Text>}
 				</Card.Title>
@@ -49,10 +55,11 @@ export default function ExamCard({ exam, ...props }) {
 				gap='8px'
 			>
 				{exam.authorized_groups.map((group) => (
-					<GroupBadge key={group._id+exam._id} group={group}/>
+					<GroupBadge key={group+exam._id} group={group}/>
 				))}
 			</Flex>
 			</Card.Footer>
+			<ExamAdminDrawer open={open} setOpen={setOpen} exam={exam} />
 		</Card.Root>
 	);
 }
