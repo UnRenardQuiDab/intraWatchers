@@ -40,7 +40,7 @@ export default function Home() {
 				background='bg.subtle'
 				padding='8px'
 			>
-				<ProfileCard w='100%'/>
+				<ProfileCard w='100%' user={me}/>
 				<Separator w='100%' />
 				<Stack w='100%'>
 					<Button w='100%' variant='ghost' display='flex' justifyContent='space-between'>Home <FaHouse/></Button>
@@ -53,7 +53,7 @@ export default function Home() {
 				h='100vh'
 				w='82%'
 				padding='8px'
-				overflowY='scroll'
+				overflowY='auto'
 			>
 				{months.map((date) => (
 					<ExamMonthSection key={date.month + date.year} year={date.year} month={date.month} exams={

@@ -1,40 +1,40 @@
 import { Card, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import { Avatar } from "./ui/avatar";
-import { useMe } from "../context/useMe";
 import GroupBadge from "./GroupBadge";
 
-export default function ProfileCard({...props}) {
+export default function ProfileCard({user, children, ...props}) {
 
-	const { me } = useMe();
-
-	if (me)
+	if (user)
 		return (
 			<Card.Root w='100%' {...props}>
-				<Card.Body p='4' paddingBottom={0}>
+				<Card.Header p='4' paddingBottom={0}>
 					<HStack mb="6">
 						<Avatar
 							size="sm"
-							name={`${me.firstname} ${me.lastname}`}
-							src={me.image_url}
+							name={`${user.firstname} ${user.lastname}`}
+							src={user.image_url}
 							/>
 						<Stack gap="0">
 							<Text fontWeight="semibold" textStyle="sm">
-								{me.firstname} {me.lastname}
+								{user.firstname} {user.lastname}
 							</Text>
 							<Text color="fg.muted" textStyle="sm">
-								@{me.login}
+								@{user.login}
 							</Text>
 						</Stack>
 					</HStack>
+				</Card.Header>
+				<Card.Body p='4' paddingY={0}>
+					<Flex
+						gap='8px'
+					>
+						{user.groups.map((group) => (
+							<GroupBadge key={group} group={group}/>
+						))}
+					</Flex>
 				</Card.Body>
 				<Card.Footer p='4' paddingTop={0}>
-				<Flex
-					gap='8px'
-				>
-					{me.groups.map((group) => (
-						<GroupBadge key={group} group={group}/>
-					))}
-				</Flex>
+					{children}
 				</Card.Footer>
 			</Card.Root>
 		);

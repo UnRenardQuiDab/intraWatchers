@@ -87,6 +87,44 @@ export const ExamsProvider = ({ children }) => {
 		return archived;
 	}
 
+	const removeWatcher = async (examId, login) => {
+		const removed = await fetch(`${config.apiUrl}/exams/${examId}/watchers/${login}`, {
+			method: 'DELETE',
+			credentials: 'include',
+		});
+		if (removed.ok) {
+			const newWatcher = await removed.json();
+			setExams(exams.map(exam => {
+				if (exam._id === examId) {
+					return {...exam, watchers: newWatcher};
+				}
+				return exam;
+			}));
+		}
+		return removed;
+	}
+
+	const addWatcher = async (examId, login) => {
+		const added = await fetch(`${config.apiUrl}/exams/${examId}/watchers`, {
+			method: 'POST',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({login}),
+		});
+		if (added.ok) {
+			const newWatcher = await added.json();
+			setExams(exams.map(exam => {
+				if (exam._id === examId) {
+					return {...exam, watchers: newWatcher};
+				}
+				return exam;
+			}));
+		}
+		return added;
+	};
+
 	useEffect(() => {
 		fetchExams();
 	}, []);
@@ -101,6 +139,13 @@ export const ExamsProvider = ({ children }) => {
 				unregister: () => unregister(exam._id),
 				archive: () => archive(exam._id),
 				remove: () => remove(exam._id),
+				addWatcher: (login) => addWatcher(exam._id, login),
+				watchers: exam.watchers.map(watcher => {
+					return {
+						...watcher,
+						remove: () => removeWatcher(exam._id, watcher.login),
+					};
+				}),
 			};
 		}),
 		create: (e) => create(e),

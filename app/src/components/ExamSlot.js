@@ -50,7 +50,7 @@ export default function ExamSlot({ watcher, exam, disabled, ...props }) {
 
 	if (disabled) {
 		return (
-		<Button minHeight='40px' width='100%' disabled variant='subtle'>
+		<Button minHeight='40px' width='100%' disabled variant='outline'>
 			<FaEllipsis/>
 		</Button>
 	)}

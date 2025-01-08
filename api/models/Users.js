@@ -10,6 +10,9 @@ const usersSchema = new mongoose.Schema({
 	groups: [{ type: String }]
 });
 
+usersSchema.index({ login: 'text', firstname: 'text' });
+
+
 const Users = mongoose.model('Users', usersSchema);
 
 module.exports = Users;

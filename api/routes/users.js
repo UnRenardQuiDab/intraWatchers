@@ -5,7 +5,14 @@ const api42 = require("../api42");
 const router = new express.Router();
 
 router.get('/', async (req, res) => {
-	const users = await Users.find().sort({ login: 1 }).limit(20);
+	const login = req.query.login;
+	const regex = new RegExp(login, 'i');
+	const users = await Users.find({
+        $or: [
+            { login: regex },
+            { firstname: regex }
+        ]
+    }).sort({ login: 1 }).limit(20);
 	return res.status(200).send(users);
 });
 
