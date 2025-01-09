@@ -117,6 +117,7 @@ export default function ExamAdminDrawer({open, setOpen, exam}) {
 					<Button
 						colorPalette='red' size='sm' w='100%' mt='8px'
 						onClick={() => unregisterWatcher(watcher)}
+						 variant='subtle'
 					><FaXmark/> Remove</Button>
 				</ProfileCard>
 			))}

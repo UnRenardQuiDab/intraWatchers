@@ -1,11 +1,9 @@
 import { useExams } from "../context/useExams";
 import ExamMonthSection from "../components/ExamMonthSection";
-import ProfileCard from "../components/ProfileCard";
-import { Button, Flex, Separator, Stack } from "@chakra-ui/react";
-import { FaClockRotateLeft, FaHouse, FaRightFromBracket } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ExamCreationForm from "../components/ExamCreationForm";
 import { useMe } from "../context/useMe";
+import LeftNavTemplate from "../templates/LeftNavTemplate";
 
 export default function Home() {
 
@@ -32,39 +30,16 @@ export default function Home() {
 
 	if (months && me)
 	return (
-		<Flex>
-			<Stack
-				h='100vh'
-				minWidth='250px'
-				w='18%'
-				background='bg.subtle'
-				padding='8px'
-			>
-				<ProfileCard w='100%' user={me}/>
-				<Separator w='100%' />
-				<Stack w='100%'>
-					<Button w='100%' variant='ghost' display='flex' justifyContent='space-between'>Home <FaHouse/></Button>
-					<Button w='100%' variant='ghost' display='flex' justifyContent='space-between'>History <FaClockRotateLeft /></Button>
-				</Stack>
-				<Separator w='100%' />
-				<Button w='100%' variant='solid' colorPalette='red' display='flex' justifyContent='space-between'>Logout <FaRightFromBracket/></Button>
-			</Stack>
-			<Stack
-				h='100vh'
-				w='82%'
-				padding='8px'
-				overflowY='auto'
-			>
-				{months.map((date) => (
-					<ExamMonthSection key={date.month + date.year} year={date.year} month={date.month} exams={
-						exams.filter(exam =>
-							new Date(exam.start_at).toLocaleString('default', { month: 'long' }) === date.month &&
-							new Date(exam.start_at).getFullYear() === date.year
-						)
-					} />
-				))}
-			</Stack>
+		<LeftNavTemplate me={me}>
+			{months.map((date) => (
+				<ExamMonthSection key={date.month + date.year} year={date.year} month={date.month} exams={
+					exams.filter(exam =>
+						new Date(exam.start_at).toLocaleString('default', { month: 'long' }) === date.month &&
+						new Date(exam.start_at).getFullYear() === date.year
+					)
+				} />
+			))}
 			{ me.is_staff && <ExamCreationForm onCreate={create} />}
-		</Flex>
+		</LeftNavTemplate>
 	);
 }

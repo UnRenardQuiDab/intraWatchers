@@ -1,24 +1,28 @@
-import { Text } from "@chakra-ui/react";
+import { Card, Text } from "@chakra-ui/react";
 import { ProgressBar, ProgressRoot } from "./ui/progress";
 import { StatLabel, StatRoot, StatValueText } from "./ui/stat";
 
 export default function ExamStats({ label, value, needed, info }) {
 	return (
-		<StatRoot maxW="240px" colorPalette={value >= needed ? 'green' : ''}>
-		  <StatLabel>{ label }</StatLabel>
-		  <StatValueText>
-			{value}
-			{ needed ?
-				<Text fontWeight='normal'> / {needed}</Text>
-				: ''
+		<Card.Root>
+      	<Card.Body>
+			<StatRoot colorPalette={value >= needed ? 'green' : ''}>
+			<StatLabel>{ label }</StatLabel>
+			<StatValueText>
+				{value}
+				{ needed ?
+					<Text fontWeight='normal'> / {needed}</Text>
+					: ''
+				}
+			</StatValueText>
+			{needed &&
+				<ProgressRoot value={value / needed * 100}>
+					<ProgressBar />
+				</ProgressRoot>
 			}
-		  </StatValueText>
-		  {needed &&
-			<ProgressRoot value={value / needed * 100}>
-				<ProgressBar />
-			</ProgressRoot>
-		  }
-		</StatRoot>
+			</StatRoot>
+		</Card.Body>
+		</Card.Root>
 	  )
 	
 }
