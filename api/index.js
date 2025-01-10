@@ -6,6 +6,8 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const isLoggedIn = require('./middlewares/isLoggedIn');
 const isStaff = require('./middlewares/isStaff');
+const Exams = require('./models/Exams');
+const { populate } = require('./models/Users');
 const app = express();
 
 const corsOptions =  {
@@ -36,7 +38,11 @@ app.use('/exams', isLoggedIn, require('./routes/exams'));
 app.use('/users', isLoggedIn, isStaff, require('./routes/users'));
 
 app.get('/me', isLoggedIn, async (req, res) => {
-	return res.status(200).send(req.user);
+    const exams = await Exams.find({ watchers: req.user._id, is_archived: true  }).populate('watchers').sort({ start_at: -1 });
+	return res.status(200).send({
+        ...req.user['_doc'], 
+        last_watch: exams.length > 0 ? exams[0].start_at : null
+    });
 });
 
 app.listen(3000, () => {
