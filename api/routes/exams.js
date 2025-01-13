@@ -121,6 +121,8 @@ router.post('/:id/archived', isStaff, async (req, res) => {
 			return res.status(400).send("This exam is not started yet");
 		exam.is_archived = true;
 		for (const watcher of exam.watchers) {
+			if (watcher.last_watch < exam.start_at)
+				watcher.last_watch = exam.start_at;
 			watcher.nb_watch++;
 			try {
 				await insertRow(watcher.login, exam.start_at);

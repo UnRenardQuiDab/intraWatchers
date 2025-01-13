@@ -1,41 +1,50 @@
 import { Card, HStack, Table } from "@chakra-ui/react";
 import { PaginationNextTrigger, PaginationPageText, PaginationPrevTrigger, PaginationRoot } from "./ui/pagination";
+import useUsers from "../hooks/useUsers";
+import { Avatar } from "./ui/avatar";
+import { FaUser } from "react-icons/fa6";
+import { useMe } from "../context/useMe";
 
 export default function LeaderBoard({...props}) {
 
-	const items = [
-		{ id: 1, name: "Laptop", category: "Electronics", price: 999.99 },
-		{ id: 2, name: "Coffee Maker", category: "Home Appliances", price: 49.99 },
-		{ id: 3, name: "Desk Chair", category: "Furniture", price: 150.0 },
-		{ id: 4, name: "Smartphone", category: "Electronics", price: 799.99 },
-		{ id: 5, name: "Headphones", category: "Accessories", price: 199.99 },
-	]
+	const {users, nbPages, setPageNumber, page} = useUsers('-nb_watch -last_watch', 1, 10, -1);
+	const { me } = useMe();
 
+	if (users && me)
 	return (
-		<Card.Root {...props}>
+		<Card.Root {...props} overflowY='auto'>
 			<Card.Body gap="2">
-				<Card.Title mt="2">LeaderBoard</Card.Title>
+				<Card.Title mt="2">Exams Leaderboard</Card.Title>
 				<Table.Root size='md'>
 					<Table.Header>
 						<Table.Row bg='transparent'>
+							<Table.ColumnHeader><FaUser/></Table.ColumnHeader>
 							<Table.ColumnHeader>Login</Table.ColumnHeader>
-							<Table.ColumnHeader>Amount of watch</Table.ColumnHeader>
-							<Table.ColumnHeader textAlign="end">Last Watch</Table.ColumnHeader>
+							<Table.ColumnHeader>Count</Table.ColumnHeader>
+							<Table.ColumnHeader textAlign="end">Last</Table.ColumnHeader>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{items.map((item) => (
-							<Table.Row key={item.id}>
-								<Table.Cell>{item.name}</Table.Cell>
-								<Table.Cell>{item.category}</Table.Cell>
-								<Table.Cell textAlign="end">{item.price}</Table.Cell>
+						{users.map((user) => (
+							<Table.Row key={user._id}  bg={me.login === user.login ? 'bg.muted':'transparent'} >
+								<Table.Cell><Avatar src={user.image_url} alt={user.login} size='2xs'/> </Table.Cell>
+								<Table.Cell>
+									{user.login}
+								</Table.Cell>
+								<Table.Cell>{user.nb_watch}</Table.Cell>
+								<Table.Cell textAlign="end">{user.last_watch ? new Date(user.last_watch).toLocaleDateString('fr-FR') : '-'}</Table.Cell>
 							</Table.Row>
 						))}
 					</Table.Body>
 			</Table.Root>
 			</Card.Body>
 			<Card.Footer>
-				<PaginationRoot count={20} pageSize={2} defaultPage={1}>
+				<PaginationRoot
+					page={page}
+					count={nbPages}
+					pageSize={1}
+					onPageChange={(e) => setPageNumber(e.page)}
+				>
 					<HStack gap="4">
 						<PaginationPrevTrigger />
 						<PaginationPageText />

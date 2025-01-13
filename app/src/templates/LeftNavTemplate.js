@@ -45,7 +45,7 @@ export default function LeftNavTemplate({ me, children }) {
 				>Logout <FaRightFromBracket/></Button>
 			</Stack>
 			<Stack
-				minH='100vh'
+				h='100vh'
 				w='82%'
 				padding='8px'
 				overflowY='auto'
