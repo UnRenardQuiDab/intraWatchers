@@ -3,6 +3,7 @@ const isStaff = require("../middlewares/isStaff");
 const parseExam = require("../middlewares/parseExam");
 const Exams = require("../models/Exams");
 const express = require("express");
+const { ExamCreationLog } = require("../models/Log");
 
 const router = new express.Router();
 
@@ -24,6 +25,12 @@ router.post('/', isStaff, async (req, res) => {
 			title
 		});
 		await exam.save();
+		const log = new ExamCreationLog({
+			user: req.user._id,
+			exam: exam._id,
+			exam_date: exam.start_at
+		});
+		log.save();
 		return res.status(201).send(exam);
 	}
 	catch(e) {
@@ -37,6 +44,12 @@ router.delete('/:id', isStaff, async (req, res) => {
 		if (!exam) {
 			return res.status(404).send();
 		}
+		const log = new ExamDeletionLog({
+			user: req.user._id,
+			exam: exam._id,
+			exam_date: exam.start_at
+		});
+		log.save();
 		return res.status(200).send(exam);
 	}
 	catch {
