@@ -39,10 +39,7 @@ app.use('/users', isLoggedIn, require('./routes/users'));
 
 app.get('/me', isLoggedIn, async (req, res) => {
     const exams = await Exams.find({ watchers: req.user._id, is_archived: true  }).populate('watchers').sort({ start_at: -1 });
-	return res.status(200).send({
-        ...req.user['_doc'], 
-        last_watch: exams.length > 0 ? exams[0].start_at : null
-    });
+	return res.status(200).send(req.user);
 });
 
 app.listen(3000, () => {

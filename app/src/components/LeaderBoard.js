@@ -44,6 +44,9 @@ export default function LeaderBoard({...props}) {
 					count={nbPages}
 					pageSize={1}
 					onPageChange={(e) => setPageNumber(e.page)}
+					w='100%'
+					display='flex'
+					justifyContent='center'
 				>
 					<HStack gap="4">
 						<PaginationPrevTrigger />
