@@ -1,17 +1,14 @@
-import { Collapsible, Flex, Grid, GridItem, Heading, PopoverArrow } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, Heading, PopoverArrow } from "@chakra-ui/react";
 import { useMe } from "../context/useMe";
 import LeftNavTemplate from "../templates/LeftNavTemplate";
 import ExamStats from "../components/ExamStats";
 import ExamLastWatch from "../components/ExamLastWatch";
 import { PopoverBody, PopoverContent, PopoverRoot, PopoverTrigger } from "../components/ui/popover";
-import { Button } from "../components/ui/button";
 import LeaderBoard from "../components/LeaderBoard";
 
 export default function Statistics() {
 	
 	const { me } = useMe();
-
-	const examGoals = [6, 12, 21];
 
 	const examAchivement = me && [{
 		label: "Life Guard",
@@ -72,6 +69,18 @@ export default function Statistics() {
 					<LeaderBoard
 						w='100%'
 						h='100%'
+					/>
+				</GridItem>
+				<GridItem colSpan={3} rowSpan={3}>
+					<ExamStats
+						label={"Total Wallet"}
+						value={me.nb_watch * 15 + ' ₳'}
+					/>
+				</GridItem>
+				<GridItem colSpan={3} rowSpan={2}>
+					<ExamStats
+						label={"Total Wallet"}
+						value={me.nb_watch * 15 + ' ₳'}
 					/>
 				</GridItem>
 			</Grid>
