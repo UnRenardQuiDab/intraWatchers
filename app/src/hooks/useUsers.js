@@ -1,13 +1,14 @@
 import config from "../config";
 import { useEffect, useState } from "react";
 
-export default function useUsers(sort = 'login', defaultPage = 1, pageSize = 10, orderBy = 1) {
+export default function useUsers(sort = 'login', defaultPage = 1, pageSize = 10) {
 	const [users, setUsers] = useState([]);
 	const [page, setPage] = useState(defaultPage);
 	const [nbPages, setNbPages] = useState(0);
 
 	useEffect(() => {
 		fetchUsers();
+		// eslint-disable-next-line
 	}, [page]);
 
 	const fetchUsers = async () => {

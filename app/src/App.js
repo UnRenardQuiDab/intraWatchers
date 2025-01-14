@@ -7,7 +7,12 @@ import { ExamsProvider } from './context/useExams';
 import { Toaster } from './components/ui/toaster';
 import Statistics from './pages/Statistics';
 
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement } from "chart.js";
+
+
+
 function App() {
+  ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
   return (
     <MeProvider>
      <ExamsProvider>

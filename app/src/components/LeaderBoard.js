@@ -7,7 +7,7 @@ import { useMe } from "../context/useMe";
 
 export default function LeaderBoard({...props}) {
 
-	const {users, nbPages, setPageNumber, page} = useUsers('-nb_watch -last_watch', 1, 10, -1);
+	const {users, nbPages, setPageNumber, page} = useUsers('-nb_watch -last_watch', 1, 10);
 	const { me } = useMe();
 
 	if (users && me)

@@ -42,7 +42,7 @@ export default function ExamCreationForm({onCreate}) {
 		}
 		else {
 			toaster.create({
-				title: 'Exam deleted',
+				title: 'Exam created',
 				type: 'success',
 			})
 			exam.start_at = '';

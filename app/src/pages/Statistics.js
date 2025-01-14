@@ -5,6 +5,9 @@ import ExamStats from "../components/ExamStats";
 import ExamLastWatch from "../components/ExamLastWatch";
 import { PopoverBody, PopoverContent, PopoverRoot, PopoverTrigger } from "../components/ui/popover";
 import LeaderBoard from "../components/LeaderBoard";
+import ApplePieExams from "../components/ApplePieExams";
+import LineExamsChart from "../components/LineExamsChart";
+import LastArchivedTimeLine from "../components/LastArchivedTimeLine";
 
 export default function Statistics() {
 	
@@ -28,7 +31,7 @@ export default function Statistics() {
 	return (
 		<LeftNavTemplate me={me}>
 			<Heading>Statistics</Heading>
-			<Grid templateColumns="repeat(4, 1fr)" templateRows="repeat(6, 1fr)" gap='16px' h='100%'>
+			<Grid templateColumns="repeat(4, 1fr)" templateRows="repeat(6, 1fr)" gap='16px' h='95%'>
 				<ExamStats
 					label={"Total Exams"}
 					value={me.nb_watch}
@@ -39,7 +42,7 @@ export default function Statistics() {
 							label={examAchivement[0].label}
 							value={me.nb_watch}
 							needed={examAchivement[0].needed}
-						/>
+						/> 
 					</PopoverTrigger>
 					<PopoverContent>
 						<PopoverArrow />
@@ -71,17 +74,15 @@ export default function Statistics() {
 						h='100%'
 					/>
 				</GridItem>
-				<GridItem colSpan={3} rowSpan={3}>
-					<ExamStats
-						label={"Total Wallet"}
-						value={me.nb_watch * 15 + ' ₳'}
+				<GridItem colSpan={2} rowSpan={3}>
+					<ApplePieExams/>
+				</GridItem>
+				<GridItem colSpan={1} rowSpan={3}>
+					<LastArchivedTimeLine
 					/>
 				</GridItem>
 				<GridItem colSpan={3} rowSpan={2}>
-					<ExamStats
-						label={"Total Wallet"}
-						value={me.nb_watch * 15 + ' ₳'}
-					/>
+					<LineExamsChart/>
 				</GridItem>
 			</Grid>
 			<Flex>

@@ -23,6 +23,7 @@ function _optionalChain(ops) {
       lastAccessLHS = value
       value = fn(value)
     } else if (op === 'call' || op === 'optionalCall') {
+      //eslint-disable-next-line
       value = fn((...args) => value.call(lastAccessLHS, ...args))
       lastAccessLHS = undefined
     }

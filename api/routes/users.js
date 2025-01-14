@@ -1,5 +1,6 @@
 const express = require("express");
 const Users = require("../models/Users");
+const Exams = require("../models/Exams");
 const api42 = require("../api42");
 const isStaff = require("../middlewares/isStaff");
 
@@ -8,11 +9,11 @@ const router = new express.Router();
 router.get('/', async (req, res) => {
 	const sort = req.query.sort || 'login';
 	const page = req.query.page || 1;
-	const pageSize = req.query.pageSize || 20;
+	let pageSize = req.query.pageSize || 20;
 	const login = req.query.login;
 	const regex = new RegExp(login, 'i');
-	if (pageSize > 20)
-		pageSize = 20;
+	if (pageSize > 100)
+		pageSize = 100;
 	try {
 		const users = await Users.find({
 			$or: [
@@ -55,6 +56,21 @@ router.post('/', isStaff, async (req, res) => {
 		});
 		await user.save();
 		return res.status(201).send(user);
+	}
+	catch(e) {
+		return res.status(400).send();
+	}
+});
+
+router.get('/:login/exams', async (req, res) => {
+	const login = req.params.login;
+	try {
+		const user = await Users.findOne({ login});
+		if (!user) {
+			return res.status(404).send();
+		}
+		const exams = await Exams.find({watchers: user._id, start_at: {$gt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)}});
+		return res.status(200).send(exams);
 	}
 	catch(e) {
 		return res.status(400).send();

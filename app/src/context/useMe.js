@@ -21,13 +21,31 @@ export const MeProvider = ({ children }) => {
     }
   };
 
+  const getMyExams = async () => {
+    if (!me) {
+      return;
+    }
+    try {
+      const exams = await fetch(`${config.apiUrl}/users/${me.login}/exams`, {
+        credentials: 'include',
+      });
+      if (exams.ok) {
+        return await exams.json();
+      }
+    }
+    catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchMe();
   }, []);
 
   return (
     <MeContext.Provider value={{
-      me
+      me,
+      getMyExams
     }}>
       {children}
     </MeContext.Provider>
