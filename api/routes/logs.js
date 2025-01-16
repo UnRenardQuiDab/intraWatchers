@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const express = require('express');
-const {Logs} = require('../models/Log');
+const {Logs} = require('../models/Logs');
 const Users = require('../models/Users');
 
 const router = new express.Router();

@@ -5,9 +5,6 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const isLoggedIn = require('./middlewares/isLoggedIn');
-const isStaff = require('./middlewares/isStaff');
-const Exams = require('./models/Exams');
-const { populate } = require('./models/Users');
 const app = express();
 
 const corsOptions =  {
@@ -43,5 +40,5 @@ app.get('/me', isLoggedIn, async (req, res) => {
 });
 
 app.listen(4000, () => {
-    console.log('Server is running on http://localhost:3000');
+    console.log(`Server is running on 4000`);
 });

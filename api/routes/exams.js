@@ -3,7 +3,7 @@ const isStaff = require("../middlewares/isStaff");
 const parseExam = require("../middlewares/parseExam");
 const Exams = require("../models/Exams");
 const express = require("express");
-const { ExamCreationLogs, ExamDeletionLogs, ExamArchiveLogs, ExamUnregisterLogs, ExamRegisterLogs } = require("../models/Log");
+const { ExamCreationLogs, ExamDeletionLogs, ExamArchiveLogs, ExamUnregisterLogs, ExamRegisterLogs } = require("../models/Logs");
 
 const router = new express.Router();
 

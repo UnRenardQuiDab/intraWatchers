@@ -1,14 +1,5 @@
 const mongoose = require('../db');
 
-// logs
-// Exam register
-// Exam unregister
-// Exam force register (by admin)
-// Exam force unregister (by admin)
-// Exam creation (by admin)
-// Exam deletion (by admin)
-// Exam archive (by admin)
-
 const logSchema = new mongoose.Schema({
 	user: { type: mongoose.Schema.Types.ObjectId, ref: 'Users', required: true },
 	created_at: { type: Date, default: Date.now },

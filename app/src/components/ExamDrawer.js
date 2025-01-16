@@ -104,7 +104,7 @@ export default function ExamDrawer({isAdmin, open, setOpen, exam}) {
 					{ exam.title && <Text fontSize='sm' color='text.subtle'>{exam.title}</Text>}
 				</Flex>
 				<Text color='fg.muted' fontSize='xs'>
-					{exam.start_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' - ' + exam.end_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}
+					{new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(exam.start_at) + ' ' + exam.start_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' - ' + exam.end_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}
 				</Text>
 			</DrawerTitle>
         </DrawerHeader>

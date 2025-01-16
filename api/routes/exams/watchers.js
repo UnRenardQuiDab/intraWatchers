@@ -1,6 +1,6 @@
 const express = require('express');
 const Users = require('../../models/Users');
-const { ExamForceRegisterLogs, ExamForceUnregisterLogs } = require('../../models/Log');
+const { ExamForceRegisterLogs, ExamForceUnregisterLogs } = require('../../models/Logs');
 
 const router = new express.Router();
 

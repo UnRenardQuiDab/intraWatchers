@@ -28,7 +28,7 @@ export default function ExamCard({ exam, ...props }) {
 					{ exam.title && <Text fontSize='sm' color='text.subtle'>{exam.title}</Text>}
 				</Card.Title>
 				<Card.Description>
-					{exam.start_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' - ' + exam.end_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}
+					{new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(exam.start_at) + ' ' + exam.start_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + ' - ' + exam.end_at.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}
 				</Card.Description>
 			</Card.Header>
 			<Card.Body gap='8px'>

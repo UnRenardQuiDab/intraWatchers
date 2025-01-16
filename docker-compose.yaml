@@ -10,6 +10,7 @@ services:
       - NGINX_PORT=$NGINX_PORT
     networks:
       - main
+    restart: always
 
   api:
     build:
@@ -55,4 +56,5 @@ networks:
     driver: bridge
   db:
     driver: bridge
+
 
