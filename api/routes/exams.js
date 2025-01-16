@@ -10,6 +10,9 @@ const router = new express.Router();
 router.get('/', async (req, res) => {
 	const exams = await Exams.find({
 		is_archived: false,
+		start_at: {
+			$lt: new Date(new Date().setMonth(new Date().getMonth() + 1))
+		}
 	}).sort({ start_at: 1 }).populate('watchers');
 	return res.status(200).send(exams);
 });
