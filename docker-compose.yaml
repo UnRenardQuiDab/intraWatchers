@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   nginx:
     image: nginx
@@ -30,6 +32,7 @@ services:
     restart: always
     secrets:
       - credentials.json
+    image: bwisniew/intra-tutors-api:latest
   
   app:
     build:
@@ -39,6 +42,7 @@ services:
     networks:
       - main
     restart: always
+    image: bwisniew/intra-tutors-app:latest
 
   mongo:
     image: mongo
@@ -48,7 +52,6 @@ services:
       - db
     restart: always
 
-
 volumes:
   mongo-data:
 
@@ -57,7 +60,6 @@ networks:
     driver: bridge
   db:
     driver: bridge
-
 
 secrets:
   credentials.json:
