@@ -14,7 +14,8 @@ services:
 
   api:
     build:
-      context: ./api
+      context: ./api/
+      dockerfile: Dockerfile.dev
     environment:
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
@@ -30,15 +31,26 @@ services:
     restart: always
     secrets:
       - credentials.json
+    volumes:
+      - ./api:/api
+      - /api/node_modules
   
   app:
     build:
-      context: ./app
-      args:
-        REACT_APP_BACKEND_URL: ${BACKEND_URL}
+      context: ./app/
+      dockerfile: Dockerfile.dev
+    environment:
+      - REACT_APP_BACKEND_URL=${BACKEND_URL}
+      - CHOKIDAR_USEPOLLING=true
+      - WDS_SOCKET_PORT=0
     networks:
       - main
     restart: always
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
 
   mongo:
     image: mongo

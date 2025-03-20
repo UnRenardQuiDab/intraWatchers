@@ -39,6 +39,6 @@ app.get('/me', isLoggedIn, async (req, res) => {
 	return res.status(200).send(req.user);
 });
 
-app.listen(4000, () => {
-    console.log(`Server is running on 4000`);
+app.listen(3000, () => {
+    console.log(`Server is running on 3000`);
 });
