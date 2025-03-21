@@ -1,7 +1,3 @@
-const { default: mongoose } = require("mongoose");
-const api42 = require("../api42");
-const Exams = require("../models/Exams");
-const Users = require("../models/Users");
 const sheetNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 // 2024
@@ -12,63 +8,106 @@ const sheetNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil
 const spreadsheetId = "1SbYQ5tCjiJtsNk4TpeIncDT6p1w0gajS2Fy0Oo0GhVY"
 const year = 2025
 
-async function createUser(login) {
-	login = login.toLowerCase();
-	const user = await Users.findOne({ login });
-	if (user) {
-		return user;
+const sessionCookie = 'IntraWatcher.sid=s%3AexYJlcDrPqZElJoiLOrOLYeanBUoI3_R.qD1A2y2bsuPXFCDLfTAi%2FM%2Fzmus9iTlLVEYoyjy%2FbG8'
+
+async function postExam(exam) {
+	console.log('post exam', exam.start_at);
+	const res = await fetch('https://tutors.bastienw.fr/api/exams', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Cookie': sessionCookie
+		},
+		body: JSON.stringify(exam),
+	});
+	const data = await res.json();
+	return data;
+}
+
+async function postUser(login) {
+	const res = await fetch('https://tutors.bastienw.fr/api/users', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Cookie': sessionCookie
+		},
+		body: JSON.stringify({ login }),
+	});
+	if (res.ok) {
+		const data = await res.json();
+		return data;
 	}
-	try {
-		const intraUser = await api42.getUser(login);
-		if (!intraUser) {
-			return null;
-		}
-		const groups = await api42.fetch(`/v2/users/${intraUser.login}/groups`);
-		const user = new Users({
-			login: intraUser.login,
-			firstname: intraUser.first_name,
-			lastname: intraUser.last_name,
-			image_url: intraUser.image.link,
-			groups: groups.map(group => group.name)
-		});
-		await user.save();
-		return user;
-	}
-	catch(e) {
-		return null;
-	}
+}
+
+async function fetchExams() {
+	const res = await fetch('https://tutors.bastienw.fr/api/exams', {
+		headers: {
+			'Cookie': sessionCookie
+		},
+	});
+	const data = await res.json();
+	console.log('fetched', data.length, 'exams');
+	return data;
+}
+
+async function postWatcher(examId, login) {
+	console.log('register watcher', login, 'for exam', examId);
+	const res = await fetch(`https://tutors.bastienw.fr/api/exams/${examId}/watchers`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Cookie': sessionCookie
+		},
+		body: JSON.stringify({ login }),
+	});
+}
+
+async function postArchivedExam(examId) {
+	console.log('archiving exam', examId);
+	const res = await fetch(`https://tutors.bastienw.fr/api/exams/${examId}/archive`, {
+		method: 'POST',
+		headers: {
+			'Cookie': sessionCookie
+		},
+	});
 }
 
 async function createExam(date, day, watcher1, watcher2) {
 	const watchers = []
 	if (watcher1) {
-		const user = await createUser(watcher1);
+		const user = await postUser(watcher1);
 		if (user)
 			watchers.push(user);
 	}
 	if (watcher2) {
-		const user = await createUser(watcher2);
+		const user = await postUser(watcher2);
 		if (user)
 			watchers.push(user);
 	}
 	const start_at = new Date(year, date.split('/')[1]-1, date.split('/')[0], day === 'MARDI' ? 10 : 14)
-	const examExists = await Exams.findOne({ start_at });
+	const exams = await fetchExams();
+	const examExists = exams.find(exam => new Date(exam.start_at).getTime() === start_at.getTime());
 	if (examExists)
 		return;
 
 	const is_archived = new Date(start_at.getTime() + 3 * 60 * 60 * 1000) < new Date();
-	console.log(start_at, is_archived);
-	const exam = new Exams({
+	const exam = await postExam({
 		start_at,
-		watchers,
-		is_archived,
 		authorized_groups: ["Watcher", "Tutor"],
 		nb_slots: 2,
 		duration: 3,
+		title: day === 'VENDREDI' ? "Alone in the Dark" : "",
 	});
-	if (day === 'VENDREDI')
-		exam.title = "Alone in the Dark";
-	await exam.save();
+
+	console.log('watchers', watchers);
+	for (const watcher of watchers) {
+		await postWatcher(exam._id, watcher.login);
+	}
+
+	if (is_archived) {
+		await postArchivedExam(exam._id);
+	}
+
 }
 
 async function extractExams() {
@@ -82,7 +121,6 @@ async function extractExams() {
 			await createExam(data.values[0][i], data.values[1][i], data.values[2][i], data.values[3][i]);
 		}
 	}
-	mongoose.connection.close()
 }
 
 extractExams()
