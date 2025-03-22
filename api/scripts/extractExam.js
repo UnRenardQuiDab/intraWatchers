@@ -11,7 +11,7 @@ const datas = [
 	}
 ]
 
-const sessionCookie = 'IntraWatcher.sid=s%3ALXS8bxrq_mdSMHmBmmq9bNov2abVHoi_.mt7wQQs1y5Zpe3WW1bThHfigWacqbdQgxmIIgj0mVXU'
+const sessionCookie = `IntraWatcher.sid=${process.env.INTRA_WATCHER_SESSION}`;
 
 async function postExam(exam) {
 	console.log('post exam', exam.start_at);

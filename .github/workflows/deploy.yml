@@ -26,20 +26,3 @@ jobs:
         run: |
           docker compose build
           docker compose push
-
-  # deploy:
-  #   needs: build-and-push
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Déployer sur le serveur
-  #       uses: appleboy/ssh-action@v1.0.3
-  #       with:
-  #         host: ${{ secrets.SERVER_IP }}
-  #         username: ${{ secrets.SERVER_USER }}
-  #         key: ${{ secrets.SERVER_SSH_KEY }}
-  #         script: |
-  #           cd /chemin/vers/ton/projet  # Remplace par ton vrai chemin
-  #           docker compose pull
-  #           docker compose down
-  #           docker compose up -d
