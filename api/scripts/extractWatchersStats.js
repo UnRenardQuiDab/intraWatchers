@@ -2,11 +2,7 @@ const { default: mongoose } = require("mongoose");
 const api42 = require("../api42");
 const Users = require("../models/Users");
 
-// 2024
-const spreadsheetId = "1fL69sCe8gwaDTcMw1TS5MAGmFiFb8w31qE2cn1Z8UBk"
-
-// 2025
-// const spreadsheetId = "1SbYQ5tCjiJtsNk4TpeIncDT6p1w0gajS2Fy0Oo0GhVY"
+const spreadsheetIds = ["1fL69sCe8gwaDTcMw1TS5MAGmFiFb8w31qE2cn1Z8UBk", "1SbYQ5tCjiJtsNk4TpeIncDT6p1w0gajS2Fy0Oo0GhVY"]
 
 async function getUser(login) {
 	login = login.toLowerCase();
@@ -38,7 +34,7 @@ async function getUser(login) {
 
 async function extractWatchersStats() {
 	
-	
+	for (const spreadsheetId of spreadsheetIds) {
 		const RANGE = "Datas!E2:F";
 		const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${RANGE}?key=${process.env.GOOGLE_API_KEY}`;
 		const res = await fetch(url);
@@ -54,6 +50,7 @@ async function extractWatchersStats() {
 			}
 			//console.log(`User ${login} not found`);
 		};
+	}
 	mongoose.connection.close()
 }
 
