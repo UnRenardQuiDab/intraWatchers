@@ -8,7 +8,7 @@ export const ExamsProvider = ({ children }) => {
 	const [exams, setExams] = useState([]);
 
 	const fetchExams = async () => {
-		const exams = await fetch(`${config.apiUrl}/exams`, {
+		const exams = await fetch(`${config.apiUrl}/exams?sort=start_at&is_archived=false`, {
 			credentials: 'include',
 		});
 		if (exams.ok) {

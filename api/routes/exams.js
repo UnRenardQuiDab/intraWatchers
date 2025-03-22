@@ -7,24 +7,59 @@ const { ExamCreationLogs, ExamDeletionLogs, ExamArchiveLogs, ExamUnregisterLogs,
 
 const router = new express.Router();
 
+// router.get('/', async (req, res) => {
+// 	const exams = await Exams.find({
+// 		is_archived: false,
+// 		start_at: {
+// 			$lt: new Date(new Date().setMonth(new Date().getMonth() + 1))
+// 		}
+// 	}).sort({ start_at: 1 }).populate('watchers');
+// 	return res.status(200).send(exams);
+// });
+
 router.get('/', async (req, res) => {
-	const exams = await Exams.find({
-		is_archived: false,
-		start_at: {
-			$lt: new Date(new Date().setMonth(new Date().getMonth() + 1))
-		}
-	}).sort({ start_at: 1 }).populate('watchers');
-	return res.status(200).send(exams);
+	const { sort, page, pageSize, is_archived, start_at } = req.query;
+	const query = {};
+	if (is_archived)
+		query.is_archived = is_archived;
+	if (start_at)
+		query.start_at = start_at;
+	const sortQuery = {};
+	if (sort)
+		sortQuery[sort] = 1;
+	const pageQuery = {};
+	if (page)
+		pageQuery.page = page;
+	else
+		pageQuery.page = 1;
+	if (pageSize)
+		pageQuery.pageSize = pageSize > 100 ? 100 : pageSize;
+	else
+		pageQuery.pageSize = 20;
+	try {
+		const exams = await Exams.find(query).sort(sortQuery).skip((page - 1) * pageQuery.pageSize).limit(pageQuery.pageSize).populate('watchers');
+		const total = await Exams.countDocuments(query);
+		res.set('X-Total-Count', total);
+		res.set('X-Page-Size', pageQuery.pageSize);
+		res.set('X-Page-Count', total / pageQuery.pageSize);
+		res.set('Access-Control-Expose-Headers', 'X-Total-Count, X-Page-Size, X-Page-Count');
+		return res.status(200).send(exams);
+	}
+	catch(e) {
+		console.error(e);
+		return res.status(400).send();
+	}
 });
 
 router.post('/', isStaff, async (req, res) => {
-	const { start_at, duration, authorized_groups, nb_slots, title } = req.body;
+	const { start_at, duration, authorized_groups, nb_slots, title, is_archived } = req.body;
 	try {
 		const exam = new Exams({
 			start_at,
 			duration,
 			authorized_groups,
 			nb_slots,
+			is_archived,
 			title
 		});
 		await exam.save();
@@ -34,6 +69,14 @@ router.post('/', isStaff, async (req, res) => {
 			exam_date: exam.start_at
 		});
 		log.save();
+		if (is_archived) {
+			const log = new ExamArchiveLogs({
+				user: req.user._id,
+				exam: exam._id,
+				exam_date: exam.start_at
+			});
+			log.save();
+		}
 		return res.status(201).send(exam);
 	}
 	catch(e) {
