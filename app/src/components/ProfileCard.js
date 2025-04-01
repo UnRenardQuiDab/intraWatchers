@@ -6,9 +6,9 @@ export default function ProfileCard({user, children, ...props}) {
 
 	if (user)
 		return (
-			<Card.Root w='100%' {...props}>
-				<Card.Header p='4' paddingBottom={0}>
-					<HStack mb="6">
+			<Card.Root w='100%' gap='4' p='4' {...props}>
+				<Card.Header p={0}>
+					<HStack w='100%'>
 						<Avatar
 							size="sm"
 							name={`${user.firstname} ${user.lastname}`}
@@ -16,7 +16,7 @@ export default function ProfileCard({user, children, ...props}) {
 							/>
 						<Stack gap="0">
 							<Text fontWeight="semibold" textStyle="sm">
-								{user.firstname} {user.lastname}
+								{user.firstname} {user.lastname} {user.is_staff && <GroupBadge group="Staff"/>}
 							</Text>
 							<Text color="fg.muted" textStyle="sm">
 								@{user.login}
@@ -24,7 +24,7 @@ export default function ProfileCard({user, children, ...props}) {
 						</Stack>
 					</HStack>
 				</Card.Header>
-				<Card.Body p='4' paddingY={0}>
+				{user.groups.length > 0 && <Card.Body p={0}>
 					<Flex
 						gap='8px'
 					>
@@ -32,10 +32,10 @@ export default function ProfileCard({user, children, ...props}) {
 							<GroupBadge key={group} group={group}/>
 						))}
 					</Flex>
-				</Card.Body>
-				<Card.Footer p='4' paddingTop={0}>
+				</Card.Body>}
+				{ children && <Card.Footer p={0}>
 					{children}
-				</Card.Footer>
+				</Card.Footer>}
 			</Card.Root>
 		);
 }

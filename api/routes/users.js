@@ -3,6 +3,7 @@ const Users = require("../models/Users");
 const Exams = require("../models/Exams");
 const api42 = require("../api42");
 const isStaff = require("../middlewares/isStaff");
+const parseUser = require("../middlewares/parseUser");
 
 const router = new express.Router();
 
@@ -41,41 +42,45 @@ router.get('/', async (req, res) => {
 
 router.post('/', isStaff, async (req, res) => {
 	const {login} = req.body;
+	const user = await Users.findOne({ login });
+	if (user) {
+		return res.status(409).send('User already exists');
+	}
 	try {
 		const intraUser = await api42.getUser(login);
-		if (!intraUser) {
-			return res.status(404).send();
-		}
 		const groups = await api42.fetch(`/v2/users/${intraUser.login}/groups`);
+		console.log(groups);
 		const user = new Users({
 			login: intraUser.login,
 			firstname: intraUser.first_name,
 			lastname: intraUser.last_name,
 			image_url: intraUser.image.link,
-			groups: groups.map(group => group.name)
+			is_staff: groups.some(group => group.name === 'STAFF'),
+			groups: groups.filter(group => group.name === 'Tutor' || group.name === 'Watcher').map(group => group.name),
 		});
 		await user.save();
 		return res.status(201).send(user);
 	}
 	catch(e) {
-		return res.status(400).send();
+		console.error(e);
+		return res.status(404).send('User not found');
 	}
 });
 
-router.get('/:login/exams', async (req, res) => {
-	const login = req.params.login;
-	try {
-		const user = await Users.findOne({ login});
-		if (!user) {
-			return res.status(404).send();
-		}
-		const exams = await Exams.find({watchers: user._id, start_at: {$gt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)}});
-		return res.status(200).send(exams);
-	}
-	catch(e) {
-		return res.status(400).send();
-	}
-});
+// router.get('/:login/exams', async (req, res) => {
+// 	const login = req.params.login;
+// 	try {
+// 		const user = await Users.findOne({ login});
+// 		if (!user) {
+// 			return res.status(404).send();
+// 		}
+// 		const exams = await Exams.find({watchers: user._id, start_at: {$gt: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)}});
+// 		return res.status(200).send(exams);
+// 	}
+// 	catch(e) {
+// 		return res.status(400).send();
+// 	}
+// });
 
 router.get('/:login/staff', isStaff, async (req, res) => {
 	const login = req.params.login;
@@ -108,7 +113,7 @@ router.delete('/:login', isStaff, async (req, res) => {
 
 router.patch('/:login', isStaff, async (req, res) => {
 	const login = req.params.login;
-	
+
 	try {
 		const user = await Users.findOneAndUpdate({ login }, req.body);
 		if (!user) {
@@ -117,10 +122,11 @@ router.patch('/:login', isStaff, async (req, res) => {
 		return res.send(user);
 	}
 	catch(e) {
-		console.error(e);
 		return res.status(400).send();
 	}
 });
+
+router.use('/:login/exams', parseUser, require('./users/exams'));
 
 
 module.exports = router;

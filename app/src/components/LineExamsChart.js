@@ -3,9 +3,7 @@ import { Box, Card, useToken } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-export default function LineExamsChart({ ...props }) {
-
-	const { getMyExams } = useMe();
+export default function LineExamsChart({ exams, ...props }) {
 
 	const getLast12Months = () => {
 		const months = [];
@@ -20,22 +18,19 @@ export default function LineExamsChart({ ...props }) {
 		return months.reverse();
 	};
 
-	const [data, setData] = useState([]);
-
-	const fetchData = async () => {
-		const exams = await getMyExams();
-		setData(getLast12Months().map(month =>
+	const getData = () => {
+		return getLast12Months().map(month =>
 			exams.filter(exam => new Date(exam.start_at).toLocaleString("default", { month: "long" }) === month).length
-		));
+		);
 	}
 
-	useEffect(() => {
-		fetchData();
-		// eslint-disable-next-line
-	}	, []);
+
 
 	const [color] = useToken("colors", ["blue.500"]);
 
+	const data = getData();
+
+	if (data === 0) return null;
 	return (
 		<Card.Root {...props} h='100%' w='100%'>
 		  <Card.Body

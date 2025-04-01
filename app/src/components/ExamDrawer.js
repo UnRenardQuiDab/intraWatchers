@@ -145,7 +145,7 @@ export default function ExamDrawer({isAdmin, open, setOpen, exam}) {
         </DrawerBody>
         <DrawerFooter>
 			{
-				isAdmin && exam.end_at < new Date() &&
+				isAdmin && exam.end_at < new Date() && !exam.is_archived &&
 				<ConfirmDialog
 				text={`Are you sure you want to archive this exam (${exam.start_at.toLocaleDateString('fr-FR')})? This action cannot be undone.`}
 					onConfirm={archiveExam}
@@ -160,7 +160,7 @@ export default function ExamDrawer({isAdmin, open, setOpen, exam}) {
 				</ConfirmDialog>
 			}
 			{
-				isAdmin &&
+				isAdmin && !exam.is_archived &&
 				<ConfirmDialog
 					text={`Are you sure you want to delete this exam (${exam.start_at.toLocaleDateString('fr-FR')})? This action cannot be undone.`}
 					onConfirm={deleteExam}

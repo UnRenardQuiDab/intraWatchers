@@ -1,6 +1,6 @@
 import { useMe } from "../context/useMe";
 import LeftNavTemplate from "../templates/LeftNavTemplate";
-import {  ActionBar, Button, HStack, Heading, IconButton, Portal, Stack, Table } from "@chakra-ui/react"
+import {  ActionBar, Button, Field, HStack, Heading, IconButton, Input, Portal, SegmentGroup, Stack, Table } from "@chakra-ui/react"
 import {
   PaginationItems,
   PaginationNextTrigger,
@@ -10,8 +10,10 @@ import {
 import useUsers from "../hooks/useUsers";
 import UserTableRow from "../components/UserTableRow";
 import { useState } from "react";
-import { LuTrash2, LuX } from "react-icons/lu";
+import { LuTrash2, LuUserSearch, LuX } from "react-icons/lu";
 import ConfirmDialog from "../components/ConfirmDialog";
+import CreateUserModal from "components/CreateUserModal";
+import { InputGroup } from "components/ui/input-group";
 
 export default function Users() {
 
@@ -19,7 +21,7 @@ export default function Users() {
 
 	const pageSize = 13;
 
-	const {users, nbPages, setPageNumber, page} = useUsers('-nb_watch -last_watch login', 1, pageSize);
+	const {users, nbPages, setPageNumber, page, addUser, userSearch} = useUsers('login', 1, pageSize);
 
 	const [selection, setSelection] = useState([]);
 
@@ -32,7 +34,7 @@ export default function Users() {
 		setSelection((prev) =>
 			changes.checked
 			  ? [...prev, user]
-			  : selection.filter((name) => name !== user),
+			  : selection.filter((u) => u._id !== user._id),
 		  )
 	};
 
@@ -42,11 +44,9 @@ export default function Users() {
 
 	const handleDelete = async () => {
 		setLoading('deleting');
-		for (const id of selection)
+		for (const user of selection)
 		{
-			const user = users.find(u => u._id === id);
-			if (user)
-				await user.delete();
+			await user.delete();
 		}
 		setSelection([]);
 		setLoading(false);
@@ -56,7 +56,18 @@ export default function Users() {
 		<LeftNavTemplate me={me}>
 			<Stack width="full" height='100%' gap="5" justifyContent='space-between'>
 				<Stack>
-					<Heading size="xl">Users</Heading>
+					<HStack justifyContent='space-between' alignItems='center'>
+						<Heading size="xl">Users</Heading>
+						<CreateUserModal createUser={addUser} />
+					</HStack>
+					<HStack justify={'flex-end'}>
+						<InputGroup startElement={<LuUserSearch/>} minWidth="300px">
+							<Input
+								placeholder="Search user"
+								onChange={(e) => userSearch(e.target.value)}
+							/>
+						</InputGroup>
+					</HStack>
 					<Table.Root size="sm" variant="outline">
 						<Table.Header>
 						<Table.Row>
@@ -73,16 +84,21 @@ export default function Users() {
 							<UserTableRow
 								key={user._id}
 								user={user}
-								checked={selection.includes(user._id)}
-								onCheckedChange={(e) => handleCheckedChange(e, user._id)}
+								checked={selection.find((u) => u._id === user._id) !== undefined}
+								onCheckedChange={(e) => handleCheckedChange(e, user)}
 							/>
 						))}
+						{users.length === 0 && (
+							<Table.Row>
+								<Table.Cell colSpan={6} textAlign="center">No user found</Table.Cell>
+							</Table.Row>
+						)}
 						</Table.Body>
 					</Table.Root>
 				</Stack>
 
 				<PaginationRoot
-					count={nbPages * pageSize}
+					count={Math.max(nbPages * pageSize, 1)}
 					pageSize={pageSize}
 					page={page}
 					onPageChange={(e) => setPageNumber(e.page)}

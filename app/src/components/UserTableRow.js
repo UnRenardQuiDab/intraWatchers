@@ -1,6 +1,7 @@
 import { Checkbox, Flex, Table, Text } from "@chakra-ui/react";
 import GroupBadge from "./GroupBadge";
 import { Avatar } from "./ui/avatar";
+import UserDrawer from "./UserDrawer";
 
 export default function UserTableRow({ user, onCheckedChange, checked }) {
 
@@ -27,25 +28,25 @@ export default function UserTableRow({ user, onCheckedChange, checked }) {
 				</Checkbox.Root>
 			</Table.Cell>
 			<Table.Cell>
-				<Flex
-					alignItems="center"
-					gap="2"
-					onClick={() => console.log(user)}
-					// cursor="pointer"
-					// onClick={() => window.open(`https://profile.intra.42.fr/users/${user.login}`, '_blank')}
-				>
-					<Avatar
-						size="sm"
-						name={`${user.firstname} ${user.lastname}`}
-						src={user.image_url}
-						/>
-					<Text
-						fontWeight="bold"
-						fontSize="sm"
-						>
-						{user.login}
-					</Text>
-				</Flex>
+				<UserDrawer user={user}>
+					<Flex
+						alignItems="center"
+						gap="2"
+						cursor="pointer"
+					>
+						<Avatar
+							size="sm"
+							name={`${user.firstname} ${user.lastname}`}
+							src={user.image_url}
+							/>
+						<Text
+							fontWeight="bold"
+							fontSize="sm"
+							>
+							{user.login}
+						</Text>
+					</Flex>
+				</UserDrawer>
 			</Table.Cell>
 			<Table.Cell>
 				{user.firstname} {user.lastname}

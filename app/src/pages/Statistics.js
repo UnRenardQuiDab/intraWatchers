@@ -8,10 +8,21 @@ import LeaderBoard from "../components/LeaderBoard";
 import ApplePieExams from "../components/ApplePieExams";
 import LineExamsChart from "../components/LineExamsChart";
 import LastArchivedTimeLine from "../components/LastArchivedTimeLine";
+import { useEffect, useState } from "react";
 
 export default function Statistics() {
 	
-	const { me } = useMe();
+	const { me, getMyExams } = useMe();
+
+	const [exams, setExams] = useState([]);
+
+	useEffect(() => {
+		if (me)
+			getMyExams().then((exams) => {
+				setExams(exams.filter(exam => exam.is_archived));
+			})
+		// eslint-disable-next-line
+	}, [me]);
 
 	const examAchivement = me && [{
 		label: "Life Guard",
@@ -95,7 +106,9 @@ export default function Statistics() {
 					/>
 				</GridItem>
 				<GridItem colSpan={[1, 1, 1, 1, 1, 3]} rowSpan={2}>
-					<LineExamsChart/>
+					<LineExamsChart
+						exams={exams}
+					/>
 				</GridItem>
 			</Grid>
 			<Flex>

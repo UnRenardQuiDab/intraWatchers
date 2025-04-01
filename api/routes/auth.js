@@ -21,15 +21,17 @@ router.get('/42/callback', async (req, res) => {
 
 	const groups = await api42.fetch(`/v2/users/${me.id}/groups`);
 
+	const existingUser = await Users.findOne({ login: me.login });
+
 	await Users.findOneAndUpdate(
 		{ login: me.login },
 		{
 			login: me.login,
-			is_staff: me['staff?'],
+			is_staff: existingUser?.is_staff ?? me['staff?'],
 			firstname: me.first_name,
 			lastname: me.last_name,
 			image_url: me.image.link,
-			groups: groups.map(group => group.name)
+			groups: groups.filter(g => g.name === 'Watcher' || g.name === 'Tutor').map(group => group.name)
 		},
 		{ new: true, upsert: true, useFindAndModify: false }
 	);
