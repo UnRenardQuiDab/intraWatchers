@@ -6,6 +6,7 @@ export default function useUsers(sort = 'login', defaultPage = 1, pageSize = 10)
 	const [users, setUsers] = useState([]);
 	const [page, setPage] = useState(defaultPage);
 	const [nbPages, setNbPages] = useState(0);
+	const [search, setSearch] = useState('');
 
 
 	const updateUser = useCallback((updatedUser) => {
@@ -19,10 +20,10 @@ export default function useUsers(sort = 'login', defaultPage = 1, pageSize = 10)
 	useEffect(() => {
 		fetchUsers();
 		// eslint-disable-next-line
-	}, [page]);
+	}, [page, search]);
 
 	const fetchUsers = async () => {
-		const response = await fetch(`${config.apiUrl}/users?sort=${sort}&page=${page}&pageSize=${pageSize}`,{
+		const response = await fetch(`${config.apiUrl}/users?sort=${sort}&page=${page}&pageSize=${pageSize}&login=${search}`,{
 			credentials: 'include'
 		});
 		const data = await response.json();
@@ -57,19 +58,15 @@ export default function useUsers(sort = 'login', defaultPage = 1, pageSize = 10)
 		if (response.status === 201) {
 			await fetchUsers()
 		}
+		else {
+			throw new Error(await response.text());
+		}
 		return response;
 	}
-
-	const userSearch = async (login) => {
-		const response = await fetch(`${config.apiUrl}/users?sort=${sort}&page=${page}&pageSize=${pageSize}&login=${login}`,{
-			credentials: 'include'
-		});
-		const data = await response.json();
-		if (response.ok)
-		{
-			setUsers(data);
-			setNbPages(response.headers.get('X-Page-Count'));
-		}
+	
+	const userSearch = (login) => {
+		setSearch(login);
+		setPage(1);
 	}
 
 	return {

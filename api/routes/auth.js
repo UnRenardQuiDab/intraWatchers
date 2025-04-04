@@ -10,38 +10,39 @@ router.get('/42', (req, res) => {
   
 router.get('/42/callback', async (req, res) => {
 	const code = req.query.code;
-	const token = await api42.generateUserToken(code);
-
-	const me = await api42.whoAmI(token);
-
-	req.session.user = {
-        login: me.login,
-		token
-    }
-
-	const groups = await api42.fetch(`/v2/users/${me.id}/groups`);
-
-	const existingUser = await Users.findOne({ login: me.login });
-
-	await Users.findOneAndUpdate(
-		{ login: me.login },
-		{
-			login: me.login,
-			is_staff: existingUser?.is_staff ?? me['staff?'],
-			firstname: me.first_name,
-			lastname: me.last_name,
-			image_url: me.image.link,
-			groups: groups.filter(g => g.name === 'Watcher' || g.name === 'Tutor').map(group => group.name)
-		},
-		{ new: true, upsert: true, useFindAndModify: false }
-	);
-
 	try {
+
+		const token = await api42.generateUserToken(code);
+
+		const me = await api42.whoAmI(token);
+
+		const groups = await api42.fetch(`/v2/users/${me.id}/groups`);
+
+		const existingUser = await Users.findOne({ login: me.login });
+
+		req.session.user = {
+			login: me.login,
+			token
+		}
+
+		await Users.findOneAndUpdate(
+			{ login: me.login },
+			{
+				login: me.login,
+				is_staff: existingUser?.is_staff ?? me['staff?'],
+				firstname: me.first_name,
+				lastname: me.last_name,
+				image_url: me.image.link,
+				groups: groups.filter(g => g.name === 'Watcher' || g.name === 'Tutor').map(group => group.name)
+			},
+			{ new: true, upsert: true, useFindAndModify: false }
+		);
+
 		await req.session.save();
 	}
 	catch (e) {
 		console.error(e);
-		return res.status(500).send('Error saving session');
+		return res.status(500);
 	}
 
 	return res.status(200).redirect(process.env.FRONTEND_URL);

@@ -86,7 +86,7 @@ export default function Exams() {
 					<ActionBar.Positioner>
 						<ActionBar.Content>
 							<PaginationRoot
-								count={pageCount}
+								count={pageCount * pageSize}
 								pageSize={pageSize}
 								page={currentPage}
 								onPageChange={(e) => setPage(e.page)}

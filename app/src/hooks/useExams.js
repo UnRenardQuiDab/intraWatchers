@@ -47,7 +47,10 @@ export default function useExams({filter = {}, sort = '-start_at', pageSize = 10
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(exam),
+			body: JSON.stringify({
+				...exam,
+				start_at: new Date(exam.start_at).toISOString(),
+			}),
 		});
 		if (response.ok) {
 			fetchExams()

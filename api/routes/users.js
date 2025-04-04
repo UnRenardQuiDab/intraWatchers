@@ -49,7 +49,6 @@ router.post('/', isStaff, async (req, res) => {
 	try {
 		const intraUser = await api42.getUser(login);
 		const groups = await api42.fetch(`/v2/users/${intraUser.login}/groups`);
-		console.log(groups);
 		const user = new Users({
 			login: intraUser.login,
 			firstname: intraUser.first_name,

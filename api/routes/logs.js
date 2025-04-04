@@ -44,7 +44,6 @@ router.get('/', async (req, res) => {
 		return res.status(200).send(logs);
 	}
 	catch(e) {
-		console.log(e);
 		return res.status(400).send();
 	}
 });

@@ -23,10 +23,8 @@ export default function CreateUserModal({createUser}) {
 			setIsOpen(false);
 			setLogin('');
 			setError(null)
-			console.log('user created');
 		}
 		catch(error) {
-			console.error(error);
 			setError(error.message);
 		}
 		setLoading(false);
@@ -39,7 +37,6 @@ export default function CreateUserModal({createUser}) {
 				variant="surface"
 				colorPalette='blue'
 				size="sm"
-				onClick={() => console.log('create user')}
 			>
 				Create user <LuUserPlus/>
 			</Button>
