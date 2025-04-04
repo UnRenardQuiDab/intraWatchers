@@ -55,7 +55,7 @@ export default class Exam {
 	}
 
 	async archive() {
-		const response = await fetch(`${config.apiUrl}/exams/${this._id}/archive?log_sheet=false`, {
+		const response = await fetch(`${config.apiUrl}/exams/${this._id}/archive?log_sheet=true`, {
 			method: 'POST',
 			credentials: 'include',
 		});
