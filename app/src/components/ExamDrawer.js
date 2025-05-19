@@ -155,7 +155,7 @@ export default function ExamDrawer({isAdmin, open, setOpen, exam}) {
 						loading={loading}
 						colorPalette='green'
 					>
-						<LuArchive/> Archived
+						<LuArchive/> Archive
 					</Button>
 				</ConfirmDialog>
 			}
