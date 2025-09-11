@@ -112,7 +112,6 @@ router.delete('/:login', isStaff, async (req, res) => {
 
 router.patch('/:login', isStaff, async (req, res) => {
 	const login = req.params.login;
-	console.log(req.body);
 	try {
 		const user = await Users.findOneAndUpdate({ login }, req.body, { new: true });
 		if (!user) {

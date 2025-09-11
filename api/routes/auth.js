@@ -18,8 +18,6 @@ router.get('/42/callback', async (req, res) => {
 
 		const groups = await api42.fetch(`/v2/users/${me.id}/groups`);
 
-		console.log("user groups:", groups);
-
 		const existingUser = await Users.findOne({ login: me.login });
 
 		req.session.user = {

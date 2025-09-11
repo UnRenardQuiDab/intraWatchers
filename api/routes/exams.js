@@ -187,7 +187,7 @@ router.post('/:id/archive', isStaff, async (req, res) => {
 				watcher.last_watch = exam.start_at;
 			watcher.nb_watch++;
 			try {
-				if (req.query.log_sheet === 'true') {
+				if (req.query.log_sheet === 'true' && process.env.SPREADSHEET_ID) {
 					await insertRow(watcher.login, exam.start_at);
 				}
 			}
