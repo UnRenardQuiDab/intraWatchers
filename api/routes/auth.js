@@ -18,6 +18,8 @@ router.get('/42/callback', async (req, res) => {
 
 		const groups = await api42.fetch(`/v2/users/${me.id}/groups`);
 
+		console.log("user groups:", groups);
+
 		const existingUser = await Users.findOne({ login: me.login });
 
 		req.session.user = {
@@ -33,7 +35,7 @@ router.get('/42/callback', async (req, res) => {
 				firstname: me.first_name,
 				lastname: me.last_name,
 				image_url: me.image.link,
-				groups: groups.filter(g => g.name === 'Watcher' || g.name === 'Tutor').map(group => group.name)
+				groups: groups.map(group => group.name.charAt(0).toUpperCase() + group.name.slice(1)).filter(g => g === 'Watcher' || g === 'Tutor'),
 			},
 			{ new: true, upsert: true, useFindAndModify: false }
 		);
