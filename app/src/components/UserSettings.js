@@ -91,27 +91,27 @@ export default function UserSettings({ user }) {
 			</SelectContent>
 		</SelectRoot>
 		<Stack>
-			<Text fontSize="sm" fontWeight="medium">
-				Change permissions for this user
-			</Text>
+			<Tooltip
+				disabled={me._id !== user._id}
+				openDelay={200}
+				content={`You can't change your own permissions`}
+			>
+				<Text fontSize="sm" fontWeight="medium">
+					Change permissions for this user
+				</Text>
+			</Tooltip>
 			<ConfirmDialog
 				text={`Are you sure you want to ${user.is_staff ? 'remove' : 'add'} staff permission for ${user.login} ?`}
 				confirmColor='red'
 				onConfirm={handlePermissionChange}
 			>
-				<Tooltip
-					disabled={me._id !== user._id}
-					openDelay={200}
-					content={`You can't change your own permissions`}
-				>
 					<Button
 						colorPalette='red'
 						loading={loading}
 						disabled={me._id === user._id}
 					>
-						<LuShield/> {user.is_staff ? 'Remove staff permision' : 'Add staff permission'}
+						<LuShield/> {user.is_staff ? 'Remove staff permission' : 'Add staff permission'}
 					</Button>
-				</Tooltip>
 			</ConfirmDialog>
 		</Stack>
 
