@@ -197,7 +197,7 @@ router.post('/:id/archive', isStaff, async (req, res) => {
 				},
 				body: JSON.stringify({
 					target: exam.watchers.map(w => w.login),
-					value: (exam.duration > 3 ? exam.duration + 1 : exam.duration) * 5, 
+					value: (exam.duration > 3 ? exam.duration + 1 : exam.duration) * 5,
 					reason: "Surveillance d'Exam",
 					transactable_type: "Tuteurs"
 				})
@@ -224,9 +224,8 @@ router.post('/:id/archive', isStaff, async (req, res) => {
 			exam_date: exam.start_at
 		});
 		await log.save();
-		resultExam = exam;
 
-		res.status(200).send(resultExam);
+		res.status(200).send(exam);
 	}
 	catch (e) {
 		if (e && e.status) {

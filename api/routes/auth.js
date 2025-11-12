@@ -42,7 +42,7 @@ router.get('/42/callback', async (req, res) => {
 	}
 	catch (e) {
 		console.error(e);
-		return res.status(500);
+		return res.status(500).send("Internal server error");;
 	}
 
 	return res.status(200).redirect(process.env.FRONTEND_URL);
