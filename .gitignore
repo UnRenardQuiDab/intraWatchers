@@ -1,6 +1,7 @@
 credentials.json
 secrets
 .DS_Store
+dump
 
 # Logs
 logs

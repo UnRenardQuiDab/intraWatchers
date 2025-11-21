@@ -24,6 +24,7 @@ services:
       - FRONTEND_URL=${FRONTEND_URL}
       - INTRA_PROXY_ENDPOINT=${INTRA_PROXY_ENDPOINT}
       - INTRA_PROXY_SECRET=${INTRA_PROXY_SECRET}
+      - API_BEARER_TOKEN=${API_BEARER_TOKEN}
     networks:
       - main
       - db

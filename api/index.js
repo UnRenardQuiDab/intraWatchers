@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const isLoggedIn = require('./middlewares/isLoggedIn');
+const isService = require('./middlewares/isService');
 const app = express();
 
 const corsOptions =  {
@@ -35,6 +36,7 @@ app.use('/exams', isLoggedIn, require('./routes/exams'));
 app.use('/users', isLoggedIn, require('./routes/users'));
 app.use('/logs', isLoggedIn, require('./routes/logs'));
 app.use('/sync', isLoggedIn, require ('./routes/sync'));
+app.use('/services', isService, require('./routes/services'));
 
 app.get('/me', isLoggedIn, async (req, res) => {
 	return res.status(200).send(req.user);

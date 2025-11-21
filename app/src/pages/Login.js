@@ -10,10 +10,10 @@ export default function Login() {
 			h="100vh"
 			w="100vw"
 			flexDir='column'
-			gap='10vh'
+			gap='3vh'
 		>
 			<Heading>
-				Intra Tutor
+				Exam gathers, and now my watch begins.
 			</Heading>
 			<Button as='a' href={`${config.apiUrl}/auth/42`} >
 				Login with 

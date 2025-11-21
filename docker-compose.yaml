@@ -4,7 +4,7 @@ services:
     volumes:
       - ./nginx:/etc/nginx/templates
     ports:
-      - "8080:80"
+      - "80:80"
     environment:
       - NGINX_HOST=$NGINX_HOST
     networks:
@@ -21,13 +21,13 @@ services:
       - SESSION_SECRET=${SESSION_SECRET}
       - INTRA_PROXY_ENDPOINT=${INTRA_PROXY_ENDPOINT}
       - INTRA_PROXY_SECRET=${INTRA_PROXY_SECRET}
+      - API_BEARER_TOKEN=${API_BEARER_TOKEN}
       - MONGO_URI=${MONGO_URI}
       - FRONTEND_URL=${FRONTEND_URL}
     networks:
       - main
       - db
     restart: always
-    image: bwisniew/intra-tutors-api:latest
   
   app:
     build:
@@ -37,7 +37,6 @@ services:
     networks:
       - main
     restart: always
-    image: bwisniew/intra-tutors-app:latest
 
   mongo:
     image: mongo
