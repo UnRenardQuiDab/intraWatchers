@@ -48,13 +48,13 @@ This will start both the API and the frontend.
 
 If you do not already have a 42 staff account and want to grant yourself staff access in development, you can update your user directly in the database by setting the `is_staff` field to `true`. You can do this with a MongoDB client such as [MongoDB Compass](https://www.mongodb.com/products/tools/compass) or the VS Code extension ["MongoDB for VS Code"](https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode), connecting to:
 
-`mongodb://172.0.0.1:27017/watchers`
+`mongodb://127.0.0.1:27017/watchers`
 
 ## Contributing
 
 We encourage contributions of all kinds:
 
-- **New features**: propose and implement improvements to the intranet.
+- **New features**: propose and implement improvements to intraWatcher.
 - **Bug fixes**: help us identify and resolve issues.
 - **Issues**: if you find a problem or have an idea, please open an issue.
 
