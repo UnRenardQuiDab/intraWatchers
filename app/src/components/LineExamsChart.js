@@ -8,18 +8,19 @@ export default function LineExamsChart({ exams, ...props }) {
 		const date = new Date();
 		for (let i = 0; i < 12; i++) {
 		  months.push(
-			new Date(date.getFullYear(), date.getMonth() - i, 1).toLocaleString("default", {
-			  month: "long",
-			})
+			new Date(date.getFullYear(), date.getMonth() - i, 1)
 		  );
 		}
 		return months.reverse();
 	};
 
 	const getData = () => {
-		return getLast12Months().map(month =>
-			exams.filter(exam => new Date(exam.start_at).toLocaleString("default", { month: "long" }) === month).length
-		);
+		return getLast12Months().map(date => {
+			return exams.filter(exam => {
+				const examDate = new Date(exam.start_at);
+				return examDate.getMonth() === date.getMonth() && examDate.getFullYear() === date.getFullYear();
+			}).length
+		});
 	}
 
 
@@ -42,7 +43,7 @@ export default function LineExamsChart({ exams, ...props }) {
 			<Box w='100%' flex={6}>
 				<Line
 					data={{
-						labels: getLast12Months(),
+						labels: getLast12Months().map(date => date.toLocaleString("default", {month: "long"})),
 						datasets: [{
 							label: ' Watch',
 							data: data,
