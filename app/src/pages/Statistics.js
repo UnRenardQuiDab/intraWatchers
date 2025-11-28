@@ -25,16 +25,16 @@ export default function Statistics() {
 		// eslint-disable-next-line
 	}, [me]);
 
-	const examAchivement = me && [{
+	const examAchievements = me && [{
 		label: "Lifeguard eligibility",
 		completed: me.nb_watch >= LIFEGUARD_COUNT,
 		needed: LIFEGUARD_COUNT
 	}, {
-		label: "Achivement 1/2",
+		label: "Achievement 1/2",
 		completed: me.nb_watch >= 12,
 		needed: 12
 	}, {
-		label: "Achivement 2/2",
+		label: "Achievement 2/2",
 		completed: me.nb_watch >= 21,
 		needed: 21
 	}].sort((a, b) => a.completed - b.completed)
@@ -60,23 +60,23 @@ export default function Statistics() {
 					<PopoverRoot lazyMount unmountOnExit>
 						<PopoverTrigger asChild>
 							<ExamStats
-								label={examAchivement[0].label}
+								label={examAchievements[0].label}
 								value={me.nb_watch}
-								needed={examAchivement[0].needed}
+								needed={examAchievements[0].needed}
 							/> 
 						</PopoverTrigger>
 						<PopoverContent>
 							<PopoverArrow />
 							<PopoverBody gap='8px' display='flex' flexDir='column'>
 								<ExamStats
-									label={examAchivement[1].label}
+									label={examAchievements[1].label}
 									value={me.nb_watch}
-									needed={examAchivement[1].needed}
+									needed={examAchievements[1].needed}
 								/>
 								<ExamStats
-									label={examAchivement[2].label}
+									label={examAchievements[2].label}
 									value={me.nb_watch}
-									needed={examAchivement[2].needed}
+									needed={examAchievements[2].needed}
 								/>
 							</PopoverBody>
 						</PopoverContent>

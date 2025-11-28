@@ -131,7 +131,7 @@ router.post('/:id/register', async (req, res) => {
 		}
 
 		if (!watch_has_experience && req.user.nb_watch < env.NEWBIE_COUNT)
-			return res.status(400).send("Sorry, an exam need at least one watcher that is not a newbie");
+			return res.status(400).send("An exam must include at least one experienced watcher");
 		exam.watchers.push(req.user._id);
 		await exam.save();
 		await exam.populate('watchers');
