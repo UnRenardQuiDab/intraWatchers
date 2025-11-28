@@ -65,7 +65,7 @@ export default function ExamSlot({ watcher, exam, disabled }) {
 				{
 					!hover ?
 					<>
-						<Avatar size='2xs' name={watcher.login} src={watcher.image_url} css={watcher.nb_watch === 0 && ringCss} colorPalette='blue' />
+						<Avatar size='2xs' name={watcher.login} src={watcher.image_url} css={watcher.nb_watch < NEWBIE_COUNT && ringCss} colorPalette='blue' />
 						{watcher.login}
 					</>
 					:
