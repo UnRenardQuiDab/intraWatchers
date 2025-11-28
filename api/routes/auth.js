@@ -63,9 +63,9 @@ router.get('/logout', isLoggedIn, async (req, res) => {
 	return res.redirect(process.env.FRONTEND_URL);
 });
 
-module.exports = router;
-
 function isFromCampus(user) {
-	const primaryCampus = user.campus_users.find(campusUser => campusUser.is_primary);
+	const primaryCampus = user?.campus_users?.find(campusUser => campusUser.is_primary);
 	return primaryCampus?.campus_id === env.CAMPUS_ID;
 }
+
+module.exports = router;
