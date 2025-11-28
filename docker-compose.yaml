@@ -24,6 +24,7 @@ services:
       - API_BEARER_TOKEN=${API_BEARER_TOKEN}
       - MONGO_URI=${MONGO_URI}
       - FRONTEND_URL=${FRONTEND_URL}
+      - CAMPUS_ID=${CAMPUS_ID}
     networks:
       - main
       - db

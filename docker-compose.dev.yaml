@@ -25,6 +25,7 @@ services:
       - INTRA_PROXY_ENDPOINT=${INTRA_PROXY_ENDPOINT}
       - INTRA_PROXY_SECRET=${INTRA_PROXY_SECRET}
       - API_BEARER_TOKEN=${API_BEARER_TOKEN}
+      - CAMPUS_ID=${CAMPUS_ID}
     networks:
       - main
       - db
