@@ -200,7 +200,7 @@ router.post('/:id/archive', isStaff, async (req, res) => {
 					'Content-Type': `application/json`
 				},
 				body: JSON.stringify({
-					target: exam.watchers.map(w => w.login),
+					targets: exam.watchers.map(w => w.login),
 					value: (exam.duration > 3 ? exam.duration + 1 : exam.duration) * 5,
 					reason: "Surveillance d'Exam",
 					transactable_type: "Tuteurs"
