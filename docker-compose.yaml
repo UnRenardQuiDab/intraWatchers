@@ -26,6 +26,7 @@ services:
       - FRONTEND_URL=${FRONTEND_URL}
       - NEWBIE_COUNT=${NEWBIE_COUNT}
       - CAMPUS_ID=${CAMPUS_ID}
+      - LIFEGUARD_LOGINS=${LIFEGUARD_LOGINS}
     networks:
       - main
       - db
