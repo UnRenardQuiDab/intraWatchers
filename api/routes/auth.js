@@ -24,6 +24,13 @@ router.get('/42/callback', async (req, res) => {
 		const groups = await api42.fetch(`/v2/users/${me.id}/groups`);
 
 		const existingUser = await Users.findOne({ login: me.login });
+		const syncedGroups = groups
+			.map(group => group.name.charAt(0).toUpperCase() + group.name.slice(1))
+			.filter(g => g === 'Watcher' || g === 'Tutor');
+
+		if (env.LIFEGUARD_LOGINS.includes(me.login.toLowerCase())) {
+			syncedGroups.push('LifeGuard');
+		}
 
 		req.session.user = {
 			login: me.login,
@@ -38,7 +45,7 @@ router.get('/42/callback', async (req, res) => {
 				firstname: me.first_name,
 				lastname: me.last_name,
 				image_url: me.image.link,
-				groups: groups.map(group => group.name.charAt(0).toUpperCase() + group.name.slice(1)).filter(g => g === 'Watcher' || g === 'Tutor'),
+				groups: syncedGroups,
 			},
 			{ new: true, upsert: true, useFindAndModify: false }
 		);
